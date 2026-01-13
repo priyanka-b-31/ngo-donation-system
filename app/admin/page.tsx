@@ -51,11 +51,26 @@ export default function AdminPage() {
     <div style={styles.page}>
       <div style={styles.card}>
         {/* 🔴 LOGOUT BUTTON */}
-        <button style={styles.logoutBtn} onClick={handleLogout}>
-          Logout
-        </button>
+        <div style={styles.navbar}>
+  <div>
+    <button style={styles.navBtn} onClick={() => router.push("/admin")}>
+      Dashboard
+    </button>
+    <button style={styles.navBtn} onClick={() => router.push("/admin/users")}>
+      Users
+    </button>
+    <button style={styles.navBtn} onClick={() => router.push("/admin/donations")}>
+      Donations
+    </button>
+  </div>
 
-        <h1 style={styles.heading}>ADMIN DASHBOARD</h1>
+  <button style={styles.logoutBtn} onClick={handleLogout}>
+    Logout
+  </button>
+</div>
+
+<h1 style={styles.heading}>ADMIN DASHBOARD</h1>
+
 
         {error && <p style={styles.errorMsg}>{error}</p>}
 
@@ -162,6 +177,24 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginBottom: "15px",
     fontWeight: "600",
   },
+  navbar: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "30px",
+},
+
+navBtn: {
+  marginRight: "10px",
+  padding: "8px 14px",
+  borderRadius: "8px",
+  border: "none",
+  background: "#e3f2fd",
+  color: "#0d47a1",
+  fontWeight: "600",
+  cursor: "pointer",
+},
+
 };
 
 
