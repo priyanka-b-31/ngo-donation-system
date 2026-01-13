@@ -31,7 +31,14 @@ export default function LoginPage() {
     } else {
       setMessage("Login successful");
       localStorage.setItem("token", data.token);
-      window.location.href = "/admin";
+localStorage.setItem("role", data.role);
+
+if (data.role === "ADMIN") {
+  window.location.href = "/admin";
+} else {
+  window.location.href = "/donate";
+}
+
     }
   }
 
