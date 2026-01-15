@@ -56,12 +56,7 @@ export default function AdminPage() {
     <button style={styles.navBtn} onClick={() => router.push("/admin")}>
       Dashboard
     </button>
-    <button style={styles.navBtn} onClick={() => router.push("/admin/users")}>
-      Users
-    </button>
-    <button style={styles.navBtn} onClick={() => router.push("/admin/donations")}>
-      Donations
-    </button>
+  
   </div>
 
   <button style={styles.logoutBtn} onClick={handleLogout}>
@@ -92,6 +87,21 @@ export default function AdminPage() {
               <p style={styles.statLabel}>TOTAL DONATION AMOUNT</p>
               <p style={styles.statValue}>₹ {summary.totalAmount}</p>
             </div>
+            <div style={{ 
+  marginTop: "25px", 
+  textAlign: "center",
+  display: "flex",
+  justifyContent: "center",
+  gap: "20px"
+}}>
+  <a href="/admin/users" style={styles.link}>
+    View Users
+  </a>
+  <a href="/admin/donations" style={styles.link}>
+    View Donations
+  </a>
+</div>
+
           </>
         )}
       </div>
@@ -194,6 +204,17 @@ navBtn: {
   fontWeight: "600",
   cursor: "pointer",
 },
+
+link: {
+  color: "#1b5e20",
+  fontWeight: "600",
+  textDecoration: "none",
+  fontSize: "16px",
+  padding: "8px 14px",
+  borderRadius: "8px",
+  background: "#e8f5e9",
+},
+
 
 };
 

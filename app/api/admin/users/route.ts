@@ -1,5 +1,3 @@
-export const runtime = "nodejs";
-
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
@@ -7,27 +5,31 @@ import User from "@/models/User";
 
 export async function GET(req: Request) {
   try {
-    const authHeader = req.headers.get("authorization");
+    await connectDB();
 
-    if (!authHeader) {
+    // 1️⃣ Auth check
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const token = authHeader.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: string;
+      role: string;
+    };
 
     if (decoded.role !== "ADMIN") {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    await connectDB();
+    // 2️⃣ Fetch users
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
 
-    const users = await User.find().select("-password");
-
-    return NextResponse.json({ users });
-  } catch (error: any) {
+    return NextResponse.json(users);
+  } catch (error) {
     return NextResponse.json(
-      { message: "Failed to fetch users", error: error.message },
+      { message: "Failed to fetch users" },
       { status: 500 }
     );
   }

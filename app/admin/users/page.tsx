@@ -3,15 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -29,21 +22,15 @@ export default function AdminUsersPage() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Unauthorized");
-        return res.json();
-      })
-      .then((data) => setUsers(data.users))
-      .catch(() => {
-        setError("Failed to load users");
-        router.push("/login");
-      });
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch(() => setError("Failed to load users"));
   }, [router]);
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h1 style={styles.heading}>REGISTERED USERS</h1>
+        <h2 style={styles.heading}>ADMIN USERS</h2>
 
         {error && <p style={styles.error}>{error}</p>}
 
@@ -53,14 +40,25 @@ export default function AdminUsersPage() {
               <th style={styles.th}>Name</th>
               <th style={styles.th}>Email</th>
               <th style={styles.th}>Role</th>
+              <th style={styles.th}>Registered On</th>
             </tr>
           </thead>
+
           <tbody>
-            {users.map((u) => (
-              <tr key={u._id}>
-                <td style={styles.td}>{u.name}</td>
-                <td style={styles.td}>{u.email}</td>
-                <td style={styles.td}>{u.role}</td>
+            {users.map((user, index) => (
+              <tr
+                key={user._id}
+                style={{
+                  backgroundColor:
+                    index % 2 === 0 ? "#f9f9f9" : "#ffffff",
+                }}
+              >
+                <td style={styles.td}>{user.name}</td>
+                <td style={styles.td}>{user.email}</td>
+                <td style={styles.td}>{user.role}</td>
+                <td style={styles.td}>
+                  {new Date(user.createdAt).toLocaleDateString()}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -74,28 +72,29 @@ export default function AdminUsersPage() {
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #e3f2fd, #e8f5e9)",
+    background: "linear-gradient(135deg, #e8f5e9, #e3f2fd)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "'Poppins', 'Segoe UI', sans-serif",
+    padding: "20px",
   },
 
   card: {
     background: "#ffffff",
+    width: "90%",
+    maxWidth: "900px",
     padding: "40px",
-    width: "700px",
-    borderRadius: "18px",
-    boxShadow: "0 25px 55px rgba(0,0,0,0.18)",
+    borderRadius: "16px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
   },
 
   heading: {
     textAlign: "center",
     marginBottom: "30px",
     color: "#1b5e20",
-    fontSize: "28px",
-    fontWeight: "900",
-    letterSpacing: "3px",
+    fontSize: "26px",
+    fontWeight: "800",
+    letterSpacing: "2px",
   },
 
   table: {
@@ -104,23 +103,28 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 
   th: {
-    background: "#1b5e20",
-    color: "#fff",
+    backgroundColor: "#1b5e20",
+    color: "#ffffff",
     padding: "12px",
     textAlign: "left",
-    fontSize: "14px",
+    fontWeight: "600",
+    fontSize: "15px",
   },
 
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    fontSize: "14px",
-    color: "#263238",
+    color: "#000000", // ✅ ALL TABLE TEXT BLACK
+    fontSize: "15px",
+    fontWeight: "500",
   },
 
   error: {
     color: "red",
     textAlign: "center",
-    marginBottom: "15px",
+    marginBottom: "10px",
+    fontWeight: "600",
   },
 };
+
+
