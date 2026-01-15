@@ -7,18 +7,27 @@ const DonationSchema = new Schema(
       ref: "User",
       required: true,
     },
+
+    userEmail: {
+      type: String,
+      required: true,
+    },
+
     amount: {
       type: Number,
       required: true,
     },
+
     status: {
       type: String,
       enum: ["PENDING", "SUCCESS", "FAILED"],
       default: "PENDING",
     },
+
     paymentId: {
       type: String,
     },
+
     orderId: {
       type: String,
     },
@@ -28,3 +37,4 @@ const DonationSchema = new Schema(
 
 const Donation = models.Donation || model("Donation", DonationSchema);
 export default Donation;
+
