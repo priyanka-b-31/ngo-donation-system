@@ -41,6 +41,13 @@ export default function UserDashboard() {
 
           <div style={styles.navButtons}>
             <button
+              style={styles.profileBtn}
+              onClick={() => router.push("/user/profile")}
+            >
+              Profile
+            </button>
+
+            <button
               style={styles.donateBtn}
               onClick={() => router.push("/donate")}
             >
@@ -122,7 +129,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginBottom: "30px",
   },
   heading: {
-    color: "#4e342e", // ✅ DARK BROWN
+    color: "#4e342e", // dark brown
     fontSize: "30px",
     fontWeight: "900",
     letterSpacing: "2px",
@@ -130,6 +137,16 @@ const styles: { [key: string]: React.CSSProperties } = {
   navButtons: {
     display: "flex",
     gap: "14px",
+  },
+  profileBtn: {
+    background: "#6d4c41",
+    color: "#fff",
+    border: "none",
+    padding: "12px 20px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "15px",
   },
   donateBtn: {
     background: "#2e7d32",
@@ -181,6 +198,3 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#000",
   },
 };
-
-
-
