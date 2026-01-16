@@ -6,15 +6,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setMessage("");
-    setError("");
+    setError(false);
 
     if (!email || !password) {
-      setError("Please fill all fields");
+      setError(true);
+      setMessage("Please fill all fields");
       return;
     }
 
@@ -27,19 +28,18 @@ export default function LoginPage() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data.message || "Login failed");
+      setError(true);
+      setMessage(data.message || "Login failed");
     } else {
       setMessage("Login successful");
       localStorage.setItem("token", data.token);
-localStorage.setItem("role", data.role);
+      localStorage.setItem("role", data.role);
 
-if (data.role === "ADMIN") {
-  window.location.href = "/admin";
-} else {
-  window.location.href = "/user/dashboard";
-}
-
-
+      if (data.role === "ADMIN") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/user";
+      }
     }
   }
 
@@ -50,7 +50,7 @@ if (data.role === "ADMIN") {
 
         <form onSubmit={handleLogin}>
           <div style={styles.inputGroup}>
-            Email
+            <label>Email</label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -61,7 +61,7 @@ if (data.role === "ADMIN") {
           </div>
 
           <div style={styles.inputGroup}>
-            Password
+            <label>Password</label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -76,21 +76,37 @@ if (data.role === "ADMIN") {
           </button>
         </form>
 
-        {message && <p style={styles.success}>{message}</p>}
-        {error && <p style={styles.error}>{error}</p>}
+        {message && (
+          <p style={error ? styles.errorMsg : styles.successMsg}>
+            {message}
+          </p>
+        )}
+
+        {/* 🔹 Register Redirect Box */}
+        <div style={styles.registerBox}>
+          <span style={styles.registerText}>Not registered yet?</span>
+          <button
+            type="button"
+            style={styles.registerBtn}
+            onClick={() => (window.location.href = "/register")}
+          >
+            Register here
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-/* 🎨 Styles (TypeScript-safe) */
-const styles = {
+/* 🎨 Styles */
+const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: "100vh",
-    display: "flex" as const,
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
     background: "linear-gradient(135deg, #eef2f3, #fce4ec)",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
 
   card: {
@@ -102,9 +118,9 @@ const styles = {
   },
 
   heading: {
-    textAlign: "center" as const,
+    textAlign: "center",
     marginBottom: "30px",
-    color: "#1b5e20",
+    color: "#1b5e20", // dark green
     fontSize: "28px",
     fontWeight: "800",
     letterSpacing: "3px",
@@ -112,8 +128,8 @@ const styles = {
   },
 
   inputGroup: {
-    display: "flex" as const,
-    flexDirection: "column" as const,
+    display: "flex",
+    flexDirection: "column",
     marginBottom: "20px",
     color: "#3e2723",
     fontSize: "16px",
@@ -140,21 +156,49 @@ const styles = {
     color: "#fff",
     fontSize: "18px",
     fontWeight: "600",
-    cursor: "pointer" as const,
+    cursor: "pointer",
   },
 
-  success: {
+  successMsg: {
     marginTop: "18px",
-    textAlign: "center" as const,
-    color: "green",
+    textAlign: "center",
+    color: "#2e7d32",
     fontWeight: "600",
   },
 
-  error: {
+  errorMsg: {
     marginTop: "18px",
-    textAlign: "center" as const,
-    color: "red",
+    textAlign: "center",
+    color: "#c62828",
     fontWeight: "600",
+  },
+
+  /* 🔽 Register box */
+  registerBox: {
+    marginTop: "25px",
+    padding: "14px",
+    background: "#f5f5f5",
+    borderRadius: "10px",
+    textAlign: "center",
+    boxShadow: "inset 0 0 0 1px #ddd",
+  },
+
+  registerText: {
+    marginRight: "6px",
+    fontSize: "15px",
+    color: "#333",
+    fontWeight: "500",
+  },
+
+  registerBtn: {
+    background: "none",
+    border: "none",
+    color: "#1e88e5",
+    fontSize: "15px",
+    fontWeight: "700",
+    cursor: "pointer",
+    textDecoration: "underline",
   },
 };
+
 
