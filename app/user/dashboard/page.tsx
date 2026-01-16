@@ -122,8 +122,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginBottom: "30px",
   },
   heading: {
-    color: "#1b5e20",
-    fontSize: "30px",        // ⬆️ increased
+    color: "#4e342e", // ✅ DARK BROWN
+    fontSize: "30px",
     fontWeight: "900",
     letterSpacing: "2px",
   },
@@ -135,7 +135,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     background: "#2e7d32",
     color: "#fff",
     border: "none",
-    padding: "12px 20px",     // ⬆️ increased
+    padding: "12px 20px",
     borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "700",
@@ -145,7 +145,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     background: "#c62828",
     color: "#fff",
     border: "none",
-    padding: "12px 20px",     // ⬆️ increased
+    padding: "12px 20px",
     borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "700",
@@ -158,13 +158,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   thRow: {
     background: "#1b5e20",
     color: "#ffffff",
-    fontSize: "17px",        // ⬆️ increased
+    fontSize: "17px",
   },
   td: {
-    padding: "14px",         // ⬆️ increased
+    padding: "14px",
     borderBottom: "1px solid #ddd",
     color: "#000000",
-    fontSize: "16px",        // ⬆️ increased
+    fontSize: "16px",
     fontWeight: "500",
   },
   error: {
@@ -181,5 +181,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#000",
   },
 };
+
 
 
