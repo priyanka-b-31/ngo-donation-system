@@ -83,6 +83,18 @@ export default function RegisterPage() {
             {message}
           </p>
         )}
+
+        {/* 🔹 Already Registered Box */}
+        <div style={styles.loginBox}>
+          <span style={styles.loginText}>Already registered?</span>
+          <button
+            type="button"
+            style={styles.loginBtn}
+            onClick={() => (window.location.href = "/login")}
+          >
+            Login here
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -102,42 +114,39 @@ const styles: { [key: string]: React.CSSProperties } = {
   card: {
     background: "#ffffff",
     padding: "40px",
-    width: "420px", // ⬅️ bigger box
+    width: "420px",
     borderRadius: "14px",
     boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
   },
 
   heading: {
-  textAlign: "center",
-  marginBottom: "30px",
-  color: "#4e342e", // dark brown
-  fontSize: "26px", // increased
-  fontWeight: "800",
-  letterSpacing: "2.5px",
-  fontFamily: "'Poppins', 'Segoe UI', sans-serif",
-},
-
+    textAlign: "center",
+    marginBottom: "30px",
+    color: "#4e342e", // dark brown
+    fontSize: "26px",
+    fontWeight: "800",
+    letterSpacing: "2.5px",
+    fontFamily: "'Poppins', 'Segoe UI', sans-serif",
+  },
 
   inputGroup: {
-  display: "flex",
-  flexDirection: "column",
-  marginBottom: "20px",
-  color: "#3e2723", // darker brown
-  fontSize: "16px", // increased label size
-  fontWeight: "500",
-},
-
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "20px",
+    color: "#3e2723",
+    fontSize: "16px",
+    fontWeight: "500",
+  },
 
   input: {
-  padding: "14px",           // bigger height
-  marginTop: "8px",
-  borderRadius: "10px",
-  border: "1px solid #cfd8dc",
-  fontSize: "16px",          // bigger text inside
-  background: "#f9fbfd",
-  boxShadow: "inset 0 2px 5px rgba(0,0,0,0.12)",
-},
-
+    padding: "14px",
+    marginTop: "8px",
+    borderRadius: "10px",
+    border: "1px solid #cfd8dc",
+    fontSize: "16px",
+    background: "#f9fbfd",
+    boxShadow: "inset 0 2px 5px rgba(0,0,0,0.12)",
+  },
 
   button: {
     width: "100%",
@@ -165,4 +174,32 @@ const styles: { [key: string]: React.CSSProperties } = {
     textAlign: "center",
     fontWeight: "600",
   },
+
+  /* 🔽 Login redirect box */
+  loginBox: {
+    marginTop: "25px",
+    padding: "14px",
+    background: "#f5f5f5",
+    borderRadius: "10px",
+    textAlign: "center",
+    boxShadow: "inset 0 0 0 1px #ddd",
+  },
+
+  loginText: {
+    marginRight: "6px",
+    fontSize: "15px",
+    color: "#333",
+    fontWeight: "500",
+  },
+
+  loginBtn: {
+    background: "none",
+    border: "none",
+    color: "#1e88e5",
+    fontSize: "15px",
+    fontWeight: "700",
+    cursor: "pointer",
+    textDecoration: "underline",
+  },
 };
+
