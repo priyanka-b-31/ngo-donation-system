@@ -36,8 +36,9 @@ localStorage.setItem("role", data.role);
 if (data.role === "ADMIN") {
   window.location.href = "/admin";
 } else {
-  window.location.href = "/donate";
+  window.location.href = "/user/dashboard";
 }
+
 
     }
   }
