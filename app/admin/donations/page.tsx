@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 
 type Donation = {
   _id: string;
-  amount: number;
-  status: "PENDING" | "SUCCESS" | "FAILED";
-  createdAt: string;
   userEmail: string;
+  amount: number;
+  status: "SUCCESS" | "FAILED" | "PENDING";
+  createdAt: string;
 };
 
 export default function AdminDonationsPage() {
@@ -30,21 +30,15 @@ export default function AdminDonationsPage() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Unauthorized");
-        return res.json();
-      })
-      .then((data) => setDonations(data.donations))
-      .catch(() => {
-        setError("Failed to load donations");
-        router.push("/login");
-      });
+      .then((res) => res.json())
+      .then((data) => setDonations(data.donations || data))
+      .catch(() => setError("Failed to load donations"));
   }, [router]);
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h1 style={styles.heading}>DONATION HISTORY</h1>
+        <h2 style={styles.heading}>DONATION HISTORY</h2>
 
         {error && <p style={styles.error}>{error}</p>}
 
@@ -57,11 +51,18 @@ export default function AdminDonationsPage() {
               <th style={styles.th}>Date</th>
             </tr>
           </thead>
+
           <tbody>
-            {donations.map((d) => (
-              <tr key={d._id}>
+            {donations.map((d, index) => (
+              <tr
+                key={d._id}
+                style={{
+                  backgroundColor:
+                    index % 2 === 0 ? "#f9f9f9" : "#ffffff",
+                }}
+              >
                 <td style={styles.td}>{d.userEmail}</td>
-                <td style={styles.td}>{d.amount}</td>
+                <td style={styles.td}>₹ {d.amount}</td>
                 <td style={{ ...styles.td, ...statusStyle(d.status) }}>
                   {d.status}
                 </td>
@@ -77,7 +78,7 @@ export default function AdminDonationsPage() {
   );
 }
 
-/* 🎨 Helpers */
+/* 🔹 Status color helper */
 function statusStyle(status: string) {
   if (status === "SUCCESS") return { color: "green", fontWeight: "700" };
   if (status === "FAILED") return { color: "red", fontWeight: "700" };
@@ -88,28 +89,29 @@ function statusStyle(status: string) {
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #f1f8e9, #e3f2fd)",
+    background: "linear-gradient(135deg, #e3f2fd, #e8f5e9)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "'Poppins', 'Segoe UI', sans-serif",
+    padding: "20px",
   },
 
   card: {
     background: "#ffffff",
+    width: "95%",
+    maxWidth: "1000px",
     padding: "40px",
-    width: "900px",
-    borderRadius: "18px",
-    boxShadow: "0 25px 55px rgba(0,0,0,0.18)",
+    borderRadius: "16px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
   },
 
   heading: {
     textAlign: "center",
     marginBottom: "30px",
     color: "#1b5e20",
-    fontSize: "28px",
-    fontWeight: "900",
-    letterSpacing: "3px",
+    fontSize: "26px",
+    fontWeight: "800",
+    letterSpacing: "2px",
   },
 
   table: {
@@ -119,22 +121,25 @@ const styles: { [key: string]: React.CSSProperties } = {
 
   th: {
     background: "#1b5e20",
-    color: "#fff",
+    color: "#ffffff",
     padding: "12px",
     textAlign: "left",
-    fontSize: "14px",
+    fontSize: "15px",
   },
 
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    fontSize: "14px",
-    color: "#263238",
+    color: "#000000",
+    fontSize: "15px",
+    fontWeight: "500",
   },
 
   error: {
     color: "red",
     textAlign: "center",
-    marginBottom: "15px",
+    marginBottom: "10px",
+    fontWeight: "600",
   },
 };
+

@@ -1,18 +1,51 @@
 "use client";
 
 import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
+
+/* -------------------- MAIN PAGE -------------------- */
 export default function DonatePage() {
+  return (
+    <Elements stripe={stripePromise}>
+      <DonateForm />
+    </Elements>
+  );
+}
+
+/* -------------------- FORM -------------------- */
+function DonateForm() {
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  async function handleDonate() {
+  async function handleDonate(e: React.FormEvent) {
+    e.preventDefault();
     setMessage("");
+    setError(false);
+
+    if (!stripe || !elements) {
+      setError(true);
+      setMessage("Stripe not loaded");
+      return;
+    }
 
     if (!amount || Number(amount) <= 0) {
       setError(true);
-      setMessage("Please enter a valid donation amount");
+      setMessage("Please enter a valid amount");
       return;
     }
 
@@ -24,8 +57,10 @@ export default function DonatePage() {
     }
 
     try {
-      // 1️⃣ Create donation (PENDING)
-      const createRes = await fetch("/api/donation/create", {
+      setLoading(true);
+
+      // 1️⃣ Create payment intent
+      const res = await fetch("/api/payment/create-intent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,132 +69,142 @@ export default function DonatePage() {
         body: JSON.stringify({ amount: Number(amount) }),
       });
 
-      const createData = await createRes.json();
-      if (!createRes.ok) throw new Error(createData.message);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
 
-      // 2️⃣ Create Stripe payment intent
-      const intentRes = await fetch("/api/donation/stripe-intent", {
+      // 2️⃣ Confirm card payment
+      const card = elements.getElement(CardElement);
+      if (!card) throw new Error("Card details missing");
+
+      const result = await stripe.confirmCardPayment(
+        data.clientSecret,
+        {
+          payment_method: {
+            card,
+          },
+        }
+      );
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
+      // 3️⃣ Confirm on backend
+      await fetch("/api/payment/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ donationId: createData.donationId }),
-      });
-
-      const intentData = await intentRes.json();
-      if (!intentRes.ok) throw new Error(intentData.message);
-
-      // 3️⃣ Verify payment (simulate)
-      const verifyRes = await fetch("/api/donation/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          donationId: createData.donationId,
-          paymentIntentId: intentData.paymentIntentId,
+          paymentIntentId: result.paymentIntent?.id,
         }),
       });
 
-      const verifyData = await verifyRes.json();
-
-      setError(false);
-      setMessage(
-        `Donation processed. Final status: ${verifyData.status}`
-      );
+      setMessage("🎉 Donation successful!");
       setAmount("");
+      card.clear();
     } catch (err: any) {
       setError(true);
       setMessage(err.message || "Donation failed");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h2 style={styles.heading}>Make a Donation</h2>
+        <h2 style={styles.heading}>MAKE A DONATION</h2>
 
-        <div style={styles.inputGroup}>
-          <label>Donation Amount</label>
+        <form onSubmit={handleDonate}>
           <input
             style={styles.input}
             type="number"
+            placeholder="Enter amount (₹)"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
           />
-        </div>
 
-        <button style={styles.button} onClick={handleDonate}>
-          Donate
-        </button>
+          <div style={styles.cardBox}>
+            <CardElement />
+          </div>
+
+          <button style={styles.button} disabled={loading}>
+            {loading ? "Processing..." : "Donate"}
+          </button>
+        </form>
 
         {message && (
-          <p style={error ? styles.errorMsg : styles.successMsg}>
-            {message}
-          </p>
+          <p style={error ? styles.error : styles.success}>{message}</p>
         )}
       </div>
     </div>
   );
 }
 
-/* 🎨 Styles */
+/* -------------------- STYLES -------------------- */
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: "100vh",
     background: "linear-gradient(135deg, #e3f2fd, #fce4ec)",
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
-    fontFamily: "Arial, sans-serif",
+    alignItems: "center",
   },
   card: {
-    background: "#ffffff",
-    padding: "30px",
-    width: "350px",
-    borderRadius: "10px",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+    background: "#fff",
+    padding: "35px",
+    width: "380px",
+    borderRadius: "14px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
   },
   heading: {
     textAlign: "center",
-    marginBottom: "20px",
-    color: "#333",
-  },
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
-    marginBottom: "15px",
-    color: "#555",
+    marginBottom: "25px",
+    fontSize: "22px",
+    fontWeight: "800",
+    letterSpacing: "2px",
+    color: "#2e7d32",
   },
   input: {
-    padding: "10px",
-    marginTop: "5px",
-    borderRadius: "6px",
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "8px",
     border: "1px solid #ccc",
-    fontSize: "14px",
+    fontSize: "16px",
+  },
+  cardBox: {
+    padding: "14px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    marginBottom: "20px",
   },
   button: {
     width: "100%",
-    padding: "12px",
-    marginTop: "10px",
-    backgroundColor: "#2e7d32",
+    padding: "14px",
+    background: "#2e7d32",
     color: "#fff",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     fontSize: "16px",
+    fontWeight: "600",
     cursor: "pointer",
   },
-  successMsg: {
+  success: {
     marginTop: "15px",
     color: "green",
     textAlign: "center",
+    fontWeight: "600",
   },
-  errorMsg: {
+  error: {
     marginTop: "15px",
     color: "red",
     textAlign: "center",
+    fontWeight: "600",
   },
 };
+
+
+
+
