@@ -126,7 +126,28 @@ The objective of this project is to design and develop a secure system where:
 
 ---
 
-## 8. How to Run the Project Locally
+## 8. Stripe Test Card Details (used in demo)
+
+- This project uses Stripe in Test/Sandbox mode.
+- Use the following test card details to simulate a successful payment:
+- Card Number: 4242 4242 4242 4242
+- Expiry Date: Any future date (e.g. 12/34)
+- CVC: Any 3 digits (e.g. 123)
+
+---
+
+## 9. Application Routes
+
+### User Routes
+-Register: /register
+-Login: /login
+-Dashboard: /user/dashboard
+-Donate: /donate
+-Profile: /user/profile
+
+🛠 Admin Routes
+
+## 9. How to Run the Project Locally
 
 ### 1. Clone the repository
 ### 2. Install Dependencies
@@ -137,3 +158,5 @@ MONGODB_URI=mongodb+srv://dbuser:yV3DaFKL0YmKm5D2@dashboard-cluster.nzz9nmw.mong
 -No real money or live payment credentials are required.
 ### 4. Start the Development Server - npm run dev
 ### 5. Now, to open the application, open the browser and visit: http://localhost:3000
+
+
