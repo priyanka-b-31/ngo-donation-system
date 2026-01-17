@@ -1,188 +1,139 @@
-🧾 NGO Donation System
-📌 Project Overview
+# NGO Donation System
 
-Non-Governmental Organizations (NGOs) often run online campaigns where users register to support a cause and may optionally donate.
-In many systems, user data is lost when a donation fails or is not completed, and administrators lack proper visibility into registrations and payment statuses.
+A backend-driven web application for NGOs that allows users to register independently of donations and enables administrators to monitor registrations and donation activities with full transparency.
 
-This project addresses these issues by building a backend-driven NGO Donation System where:
+This project ensures ethical payment handling, accurate donation tracking, and clear separation between user registration and donation flow.
 
-User registration is independent of payment
+---
 
-All donation attempts are tracked and stored
+## 1. Introduction
 
-Payment status is handled ethically and transparently
+Non-Governmental Organizations (NGOs) often run online campaigns where users register to support a cause and may optionally donate.  
+In many systems, user data is lost if a donation is not completed, and administrators lack clear visibility into registrations and payments.
 
-Admins have complete visibility of users and donations
+This project solves that problem by separating **user registration** from **donation flow**, ensuring that:
 
-🎯 Objectives
+- User data is always stored
+- Donation attempts are tracked regardless of payment outcome
+- Administrators have complete visibility into users and donations
 
-The primary objectives of this project are:
+---
 
-Allow users to register with or without donating
+## 2. Objective
 
-Ensure user data is saved regardless of payment outcome
+The objective of this project is to design and develop a secure system where:
 
-Track donations with SUCCESS / FAILED / PENDING states
+- Users can register and optionally donate
+- User data is saved regardless of payment success or failure
+- Administrators can accurately monitor registrations and donations
+- Payments are handled ethically using a sandbox payment gateway
 
-Provide admins with a central dashboard for monitoring
+---
 
-Integrate a sandbox payment gateway (Stripe Test Mode)
+## 3. Key Features
 
-🧩 Functional Requirements
-🔐 1. Authentication
+- Role-based authentication (User / Admin)
+- Independent user registration
+- Donation tracking with SUCCESS / FAILED / PENDING states
+- Admin dashboard for monitoring users and donations
+- Stripe sandbox payment gateway integration
 
-Common Login & Register page
+---
 
-Role-based access:
+## 4. Functional Requirements
 
-USER
+### 4.1 Authentication
+- Common Login & Register page for users and admins
+- Role-based access control
+- Automatic redirection after login based on role
 
-ADMIN
+---
 
-Automatic redirection after login based on role
+### 4.2 User Side Requirements
 
-👤 2. User Side Features
-User Registration
+#### a) User Registration
+- Users can register without making a donation
+- Registration data is stored permanently
 
-Users can register without making a donation
+#### b) Donation Flow
+- Users can donate any amount
+- Each donation attempt is recorded
+- Donation status is displayed as:
+  - SUCCESS
+  - FAILED
+  - PENDING
 
-Registration data is always stored
+#### c) User Dashboard
+- View complete donation history
+- View real-time donation status
+- Navigate to:
+  - Donate page
+  - Profile page
+  - Logout
 
-Donation Flow
+#### d) User Profile
+- View personal details:
+  - Name
+  - Email
+  - Role
+  - Registration date
 
-Users can donate any amount
+---
 
-Each donation attempt is recorded
+### 4.3 Admin Side Requirements
 
-Donation status shown as:
+#### a) Admin Dashboard
+- View total registered users
+- View total donations
+- View total donation amount
 
-SUCCESS
+#### b) Registration Management
+- View all registered users
+- Monitor user details and registration dates
 
-FAILED
+#### c) Donation Management
+- View all donation records
+- Track payment status and timestamps
+- View aggregated donation amounts
 
-PENDING
+---
 
-User Dashboard
+## 5. Data and Payment Handling Rules
 
-View complete donation history
+- Registration data is stored independently of donation completion
+- Donation success is marked only after genuine payment confirmation
+- Failed and pending payments are clearly recorded
+- No fake or forced payment success logic is used
 
-View real-time donation status
+---
 
-Navigate to:
+## 6. Tech Stack
 
-Donate page
+- **Frontend**: Next.js (App Router), React, TypeScript
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JWT (JSON Web Tokens)
+- **Payment Gateway**: Stripe (Test / Sandbox Mode)
 
-Profile page
+---
 
-Logout
+## 7. Payment Gateway Integration
 
-User Profile
+- Stripe is integrated in **test mode**
+- No real money or live API keys are used
+- Test card details are used for demonstration
+- Payment statuses are updated based on Stripe response
 
-View registered name
+---
 
-View email
+## 8. How to Run the Project Locally
 
-View role
-
-View registration date
-
-🛠️ 3. Admin Side Features
-Admin Dashboard
-
-View total registered users
-
-View total donations
-
-View aggregated donation amounts
-
-User Management
-
-View all registered users
-
-See registration timestamps
-
-Donation Management
-
-View all donation records
-
-Track payment status and timestamps
-
-Clearly differentiate between:
-
-Successful
-
-Failed
-
-Pending payments
-
-💳 Payment Gateway Integration
-
-Integrated Stripe Payment Gateway (Test / Sandbox Mode)
-
-Uses Stripe Payment Intents
-
-No real money involved
-
-Test cards used for demonstration
-
-Payment success is marked only after genuine confirmation
-
-✅ Stripe Test Card Used
-Card Number: 4242 4242 4242 4242
-Expiry: Any future date (e.g., 12/34)
-CVC: Any 3 digits (e.g., 123)
-
-📜 Data & Payment Handling Rules
-
-User registration is independent of donation completion
-
-Donation success is recorded only after confirmation
-
-Failed and pending donations are clearly stored
-
-No fake or forced payment success logic is used
-
-🏗️ Tech Stack
-Layer	Technology
-Frontend	Next.js (App Router)
-Backend	Next.js API Routes
-Database	MongoDB
-Authentication	JWT
-Payment Gateway	Stripe (Test Mode)
-Language	TypeScript
-🗂️ Project Structure
-app/
- ├── api/
- │   ├── auth/
- │   ├── donation/
- │   ├── payment/
- │   └── admin/
- ├── donate/
- ├── login/
- ├── register/
- ├── user/
- │   ├── dashboard/
- │   └── profile/
- ├── admin/
- │   ├── users/
- │   └── donations/
-lib/
-models/
-
-▶️ Running the Project Locally
-1️⃣ Install dependencies
-npm install
-
-2️⃣ Add environment variables (.env.local)
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-STRIPE_SECRET_KEY=your_stripe_test_secret_key
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_test_publishable_key
-
-3️⃣ Start development server
-npm run dev
-
-
-Open in browser:
-
-http://localhost:3000
+### 1. Clone the repository
+### 2. Install Dependencies
+### 3. Configure Environment Variables
+-Create a file named .env.local in the project root and add
+MONGODB_URI=mongodb+srv://dbuser:yV3DaFKL0YmKm5D2@dashboard-cluster.nzz9nmw.mongodb.net/ngoDB?appName=dashboard-cluster
+-Only Stripe Test keys are used.
+-No real money or live payment credentials are required.
+### 4. Start the Development Server - npm run dev
+### 5. Now, to open the application, open the browser and visit: http://localhost:3000
