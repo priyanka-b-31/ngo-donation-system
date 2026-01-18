@@ -158,15 +158,27 @@ The objective of this project is to design and develop a secure system where:
 #### 1. Clone the repository
 #### 2. Install Dependencies
 #### 3. Configure Environment Variables
--Create a file named .env.local in the project root and add mongodb url, stripe secret key and stripe publishable key
--Only Stripe Test keys are used.
--No real money or live payment credentials are required.
+-Create a file named .env.local in the project root and add mongodb url, stripe secret key and stripe publishable key. Only Stripe Test keys are used. No real money or live payment credentials are required.
 #### 4. Start the Development Server - npm run dev
 #### 5. Now, to open the application, open the browser and visit: http://localhost:3000
 
 ---
 
-## 11. System Architecture (Overview)
+## 11. Demo Credentials
+
+### User Account
+- Email: vishwaram@gmail.com
+- Password: ramv9
+
+### Admin Account
+- Email: priyanka@gmail.com
+- Password: priya123
+
+> Admin and user accounts are differentiated using role-based access control.
+
+---
+
+## 12. System Architecture (Overview)
 
 - Frontend built using Next.js App Router
 - Backend APIs implemented using Next.js API Routes
@@ -182,7 +194,7 @@ Login → View Users → View Donations → View Summary
 
 ---
 
-## 12. Database Schema (Summary)
+## 13. Database Schema (Summary)
 
 ### User Collection
 - name
@@ -200,7 +212,7 @@ Login → View Users → View Donations → View Summary
 
 ---
 
-## 13. Assumptions & Limitations
+## 14. Assumptions & Limitations
 
 - Email verification is not implemented
 - Refund flow is not included
@@ -208,7 +220,7 @@ Login → View Users → View Donations → View Summary
 
 ---
 
-## 14. Key Learnings
+## 15. Key Learnings
 
 - Learned to separate **user registration from payment flow** to ensure data integrity.
 - Implemented **role-based authentication and access control** using JWT.
