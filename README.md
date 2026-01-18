@@ -42,14 +42,14 @@ The objective of this project is to design and develop a secure system where:
 
 ## 4. Functional Requirements
 
-### 4.1 Authentication
+### i) Authentication
 - Common Login & Register page for users and admins
 - Role-based access control
 - Automatic redirection after login based on role
 
 ---
 
-### 4.2 User Side Requirements
+### ii) User Side Requirements
 
 #### a) User Registration
 - Users can register without making a donation
@@ -80,7 +80,7 @@ The objective of this project is to design and develop a secure system where:
 
 ---
 
-### 4.3 Admin Side Requirements
+### iii) Admin Side Requirements
 
 #### a) Admin Dashboard
 - View total registered users
@@ -139,24 +139,88 @@ The objective of this project is to design and develop a secure system where:
 ## 9. Application Routes
 
 ### User Routes
--Register: /register
--Login: /login
--Dashboard: /user/dashboard
--Donate: /donate
--Profile: /user/profile
+- Register: /register
+- Login: /login
+- Dashboard: /user/dashboard
+- Donate: /donate
+- Profile: /user/profile
+  
+### Admin Routes
+- Admin Login: /login (login using admin credentials)
+- Admin Dashboard: /admin
+- View Users: /admin/users
+- View Donations: /admin/donations
 
-🛠 Admin Routes
+---
 
-## 9. How to Run the Project Locally
+## 10. How to Run the Project Locally
 
-### 1. Clone the repository
-### 2. Install Dependencies
-### 3. Configure Environment Variables
--Create a file named .env.local in the project root and add
-MONGODB_URI=mongodb+srv://dbuser:yV3DaFKL0YmKm5D2@dashboard-cluster.nzz9nmw.mongodb.net/ngoDB?appName=dashboard-cluster
+#### 1. Clone the repository
+#### 2. Install Dependencies
+#### 3. Configure Environment Variables
+-Create a file named .env.local in the project root and add mongodb url, stripe secret key and stripe publishable key
 -Only Stripe Test keys are used.
 -No real money or live payment credentials are required.
-### 4. Start the Development Server - npm run dev
-### 5. Now, to open the application, open the browser and visit: http://localhost:3000
+#### 4. Start the Development Server - npm run dev
+#### 5. Now, to open the application, open the browser and visit: http://localhost:3000
+
+---
+
+## 11. System Architecture (Overview)
+
+- Frontend built using Next.js App Router
+- Backend APIs implemented using Next.js API Routes
+- MongoDB used for persistent data storage
+- JWT-based authentication for secure access
+- Stripe test mode used for payment simulation
+
+User Flow:
+Register → Login → Donate → View Dashboard
+
+Admin Flow:
+Login → View Users → View Donations → View Summary
+
+---
+
+## 12. Database Schema (Summary)
+
+### User Collection
+- name
+- email
+- password (hashed)
+- role (USER / ADMIN)
+- createdAt
+
+### Donation Collection
+- userId (reference to User)
+- amount
+- status (SUCCESS / FAILED / PENDING)
+- paymentId
+- createdAt
+
+---
+
+## 13. Assumptions & Limitations
+
+- Email verification is not implemented
+- Refund flow is not included
+- Designed primarily for demonstration and evaluation purposes
+
+---
+
+## 14. Key Learnings
+
+- Learned to separate **user registration from payment flow** to ensure data integrity.
+- Implemented **role-based authentication and access control** using JWT.
+- Designed backend APIs using **Next.js API Routes** for real-world use cases.
+- Gained experience with **MongoDB & Mongoose** for relational data modeling.
+- Understood real payment states like **SUCCESS, FAILED, and PENDING**.
+- Integrated a **Stripe sandbox payment gateway** safely in test mode.
+- Improved skills in **secure environment configuration** and secret management.
+- Enhanced understanding of **admin dashboards and monitoring systems**.
+
+
+
+
 
 
