@@ -7,7 +7,7 @@ type Donation = {
   _id: string;
   userEmail: string;
   amount: number;
-  status: "SUCCESS" | "FAILED" | "PENDING";
+  status: "SUCCESS" | "FAILED" | "PENDING" | string;
   createdAt: string;
 };
 
@@ -35,6 +35,11 @@ export default function AdminDonationsPage() {
       .catch(() => setError("Failed to load donations"));
   }, [router]);
 
+  /* ✅ OPTION A: HIDE FAILED DONATIONS (UI ONLY) */
+  const visibleDonations = donations.filter(
+    (d) => d.status?.toUpperCase().trim() !== "FAILED"
+  );
+
   return (
     <div style={styles.page}>
       <div style={styles.card}>
@@ -53,7 +58,7 @@ export default function AdminDonationsPage() {
           </thead>
 
           <tbody>
-            {donations.map((d, index) => (
+            {visibleDonations.map((d, index) => (
               <tr
                 key={d._id}
                 style={{
@@ -73,19 +78,31 @@ export default function AdminDonationsPage() {
             ))}
           </tbody>
         </table>
+
+        {visibleDonations.length === 0 && (
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            No successful or pending donations to display
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
-/* 🔹 Status color helper */
+/* 🔹 STATUS COLOR HELPER */
 function statusStyle(status: string) {
-  if (status === "SUCCESS") return { color: "green", fontWeight: "700" };
-  if (status === "FAILED") return { color: "red", fontWeight: "700" };
-  return { color: "orange", fontWeight: "700" };
+  const normalized = status?.toUpperCase().trim();
+
+  if (normalized === "SUCCESS")
+    return { color: "green", fontWeight: "700" };
+
+  if (normalized === "PENDING")
+    return { color: "orange", fontWeight: "700" };
+
+  return {};
 }
 
-/* 🎨 Styles */
+/* 🎨 STYLES */
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: "100vh",
@@ -142,4 +159,5 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "600",
   },
 };
+
 
